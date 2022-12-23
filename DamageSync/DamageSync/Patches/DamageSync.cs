@@ -12,22 +12,18 @@ namespace DamageSync.Patches
         {
             if (!SNetwork.SNet.IsMaster) return;
 
-#if DEBUG
-            APILogger.Debug(Module.Name, $"Sent health value: {__instance.Health}");
-#endif
+            if (ConfigManager.Debug) APILogger.Debug(Module.Name, $"Sent health value: {__instance.Health}");
             
             __instance.SendSetHealth(__instance.Health);
         }
 
-#if DEBUG
         [HarmonyPatch(typeof(Dam_EnemyDamageBase), nameof(Dam_EnemyDamageBase.ReceiveSetHealth))]
         [HarmonyPostfix]
         public static void ReceiveSetHealth(Dam_EnemyDamageBase __instance)
         {
             if (SNetwork.SNet.IsMaster) return;
 
-            APILogger.Debug(Module.Name, $"Received health value: {__instance.Health}");
+            if (ConfigManager.Debug) APILogger.Debug(Module.Name, $"Received health value: {__instance.Health}");
         }
-#endif
     }
 }

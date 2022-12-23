@@ -14,7 +14,7 @@ namespace DamageSync
     {
         public const string GUID = "randomuserhi.DamageSync";
         public const string Name = "DamageSync";
-        public const string Version = "0.0.2";
+        public const string Version = "0.0.3";
     }
 
     [BepInPlugin(Module.GUID, Module.Name, Module.Version)]
@@ -25,6 +25,8 @@ namespace DamageSync
             APILogger.Debug(Module.Name, "Loaded DamageSync");
             harmony = new Harmony(Module.GUID);
             harmony.PatchAll();
+
+            APILogger.Debug(Module.Name, "Debug is " + (ConfigManager.Debug ? "Enabled" : "Disabled"));
         }
 
         private Harmony harmony;
