@@ -7,7 +7,7 @@ namespace DamageSync
     {
         static ConfigManager()
         {
-            string text = Path.Combine(Paths.ConfigPath, "DamageSync.cfg");
+            string text = Path.Combine(Paths.ConfigPath, $"{Module.Name}.cfg");
             ConfigFile configFile = new ConfigFile(text, true);
 
             debug = configFile.Bind(
