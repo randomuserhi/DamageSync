@@ -7,7 +7,7 @@ namespace DamageSync {
     public static class Module {
         public const string GUID = "randomuserhi.DamageSync";
         public const string Name = "DamageSync";
-        public const string Version = "0.0.5";
+        public const string Version = "0.0.6";
     }
 
     [BepInPlugin(Module.GUID, Module.Name, Module.Version)]
