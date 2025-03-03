@@ -11,9 +11,13 @@ using SNetwork;
 namespace DamageSync.Patches {
     [HarmonyPatch]
     internal static class Network {
-        public static void SendLimbHealth(Agent target, int limbID, float health) {
+        public static void SendLimbHealth(EnemyAgent target, int limbID, float health) {
             // client cannot send hit indicators
             if (!SNet.IsMaster) return;
+
+            if (ConfigManager.Debug) APILogger.Debug(Module.Name, $"Sent limb health GlobalId={target.GlobalID} id={limbID} health={health}.");
+
+            if (limbID < 0) return;
 
             SNet_ChannelType channelType = SNet_ChannelType.SessionOrderCritical;
             SNet.GetSendSettings(ref channelType, out _, out SNet_SendQuality quality, out int channel);
@@ -23,6 +27,8 @@ namespace DamageSync.Patches {
                 if (player.Owner.Lookup == SNet.LocalPlayer.Lookup) continue;
                 il2cppList.Add(player.Owner);
             }
+
+            if (il2cppList.Count == 0) return;
 
             const int sizeOfHeader = sizeof(ushort) + sizeof(uint) + 1 + sizeof(int);
             const int sizeOfContent = sizeof(ushort) + 1 + sizeof(float);
@@ -38,8 +44,6 @@ namespace DamageSync.Patches {
             BitHelper.WriteBytes((byte)limbID, packet, ref index);
             BitHelper.WriteBytes(health, packet, ref index);
             SNet.Core.SendBytes(packet, quality, channel, il2cppList);
-
-            if (ConfigManager.Debug) APILogger.Debug(Module.Name, $"Sent limb health GlobalId={target.GlobalID} id={limbID} health={health}.");
         }
 
         private static byte msgtype = 52;

@@ -1,21 +1,15 @@
-﻿using API;
+﻿using Agents;
+using API;
 using HarmonyLib;
 using SNetwork;
+using UnityEngine;
 
 namespace DamageSync.Patches {
     [HarmonyPatch]
     internal class DamageSync {
-        [HarmonyPatch(typeof(Dam_EnemyDamageLimb), nameof(Dam_EnemyDamageLimb.DoDamage))]
-        [HarmonyPostfix]
-        public static void LimbDoDamage(Dam_EnemyDamageLimb __instance) {
-            if (!SNet.IsMaster) return;
-
-            Network.SendLimbHealth(__instance.m_base.Owner, __instance.m_limbID, __instance.m_health);
-        }
-
         [HarmonyPatch(typeof(Dam_EnemyDamageBase), nameof(Dam_EnemyDamageBase.ProcessReceivedDamage))]
         [HarmonyPostfix]
-        public static void ProcessReceivedDamage(Dam_EnemyDamageBase __instance) {
+        public static void ProcessReceivedDamage(Dam_EnemyDamageBase __instance, float damage, Agent damageSource, Vector3 position, Vector3 direction, ES_HitreactType hitreact, bool tryForceHitreact, int limbID) {
             if (!SNet.IsMaster) return;
 
             // Big thanks to @Dex on GTFO modding discord:
@@ -26,6 +20,10 @@ namespace DamageSync.Patches {
             __instance.m_setHealthPacket.Send(data, SNet_ChannelType.GameReceiveCritical);
             //line below is potentially useless, but thats what the game does natively in SendSetHealth
             //__instance.Health = data.health.Get(__instance.HealthMax);
+
+            if (limbID > 0 && limbID < __instance.DamageLimbs.Count) {
+                Network.SendLimbHealth(__instance.Owner, limbID, __instance.DamageLimbs[limbID].m_health);
+            }
 
             if (ConfigManager.Debug) APILogger.Debug(Module.Name, $"Sent health value: {__instance.Health}");
         }
