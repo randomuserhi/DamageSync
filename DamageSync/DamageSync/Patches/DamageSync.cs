@@ -21,7 +21,7 @@ namespace DamageSync.Patches {
             //line below is potentially useless, but thats what the game does natively in SendSetHealth
             //__instance.Health = data.health.Get(__instance.HealthMax);
 
-            if (limbID > 0 && limbID < __instance.DamageLimbs.Count) {
+            if (limbID >= 0 && limbID < __instance.DamageLimbs.Count) {
                 Network.SendLimbHealth(__instance.Owner, limbID, __instance.DamageLimbs[limbID].m_health);
             }
 
