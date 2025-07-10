@@ -8,11 +8,10 @@ using SNetwork;
 
 // TODO(randomuserhi): Add MTFO support to not add too many network hooks
 // TODO(randomuserhi): Add an agreement packet on player join to prevent sending bad packets all the time
-namespace DamageSync.Patches {
+namespace DamSync {
     [HarmonyPatch]
     internal static class Network {
         public static void SendLimbHealth(EnemyAgent target, int limbID, float health) {
-            // client cannot send hit indicators
             if (!SNet.IsMaster) return;
 
             if (ConfigManager.Debug) APILogger.Debug(Module.Name, $"Sent limb health GlobalId={target.GlobalID} id={limbID} health={health}.");

@@ -1,7 +1,7 @@
 ﻿using BepInEx.Configuration;
 using BepInEx;
 
-namespace DamageSync
+namespace DamSync
 {
     public static class ConfigManager
     {

@@ -3,7 +3,7 @@ using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 
-namespace DamageSync {
+namespace DamSync {
     public static class Module {
         public const string GUID = "randomuserhi.DamageSync";
         public const string Name = "DamageSync";
